@@ -100,7 +100,7 @@ for epoch in range(config["train_epoch"]):
 
     print(f"Epoch {epoch + 1}, Train Loss: {avg_loss:.4f}, Val Loss: {avg_val_loss:.4f}")
 
-# ========== 5. MMSE Baseline（正確版本） ==========
+# ========== 5. MMSE Baseline ==========
 mmse_losses = []
 model.eval()
 with torch.no_grad():
@@ -113,7 +113,7 @@ with torch.no_grad():
         loss = criterion(h_mmse, h)  
         mmse_losses.append(loss.item())  
 
-# ✅ 真正的平均 loss
+
 mse = sum(mmse_losses) / len(mmse_losses)
 print(f"\n MMSE Baseline MSE（正確平均）：{mse:.4f}\n")
 
