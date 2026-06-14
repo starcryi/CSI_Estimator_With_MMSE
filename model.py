@@ -32,6 +32,28 @@ class SimpleCSINet3D(nn.Module):
         return x
 
 
+class ResidualCSINet3D(nn.Module):
+    """Refine an LS channel estimate with a lightweight residual 3D CNN."""
+
+    def __init__(self, hidden_channels=32):
+        super().__init__()
+        self.refiner = nn.Sequential(
+            nn.Conv3d(3, hidden_channels, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.Conv3d(hidden_channels, hidden_channels, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.Conv3d(hidden_channels, 2, kernel_size=1),
+        )
+
+    def forward(self, h_ls, noise_variance):
+        log_noise = torch.log10(torch.clamp(noise_variance, min=1e-8))
+        noise_map = log_noise[:, None, None, None, None].expand(
+            -1, 1, *h_ls.shape[2:]
+        )
+        residual = self.refiner(torch.cat((h_ls, noise_map), dim=1))
+        return h_ls + residual
+
+
 # ===== LSTM baseline =====
 class LSTMCSINet(nn.Module):
     """

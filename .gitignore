@@ -1,4 +1,5 @@
 myenv310/
+gpu-env/
 __pycache__/
 *.pkl
 *.pt

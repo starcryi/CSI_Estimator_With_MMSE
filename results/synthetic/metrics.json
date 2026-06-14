@@ -1,0 +1,29 @@
+{
+  "device": "cuda",
+  "parameters": 30370,
+  "best_validation_nmse": 0.02878954471088946,
+  "test_nmse_db": {
+    "LS": -8.230067253112793,
+    "LMMSE": -9.777947425842285,
+    "Residual CNN": -15.315671920776367
+  },
+  "configuration": {
+    "train_samples": 20000,
+    "val_samples": 4000,
+    "test_samples": 5000,
+    "epochs": 30,
+    "batch_size": 128,
+    "learning_rate": 0.001,
+    "num_rx": 4,
+    "num_tx": 4,
+    "num_subcarriers": 32,
+    "num_taps": 6,
+    "snr_min_db": 0.0,
+    "snr_max_db": 30.0,
+    "spatial_correlation": 0.6,
+    "hidden_channels": 32,
+    "seed": 2026,
+    "device": "cuda",
+    "output_dir": "results\\synthetic"
+  }
+}

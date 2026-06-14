@@ -1,0 +1,29 @@
+{
+  "device": "cpu",
+  "parameters": 7842,
+  "best_validation_mse": 0.06693914532661438,
+  "test_nmse_db": {
+    "LS": -8.421598434448242,
+    "LMMSE": -9.933914184570312,
+    "Residual CNN": -8.820375442504883
+  },
+  "configuration": {
+    "train_samples": 512,
+    "val_samples": 128,
+    "test_samples": 256,
+    "epochs": 3,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "num_rx": 4,
+    "num_tx": 4,
+    "num_subcarriers": 16,
+    "num_taps": 6,
+    "snr_min_db": 0.0,
+    "snr_max_db": 30.0,
+    "spatial_correlation": 0.6,
+    "hidden_channels": 16,
+    "seed": 2026,
+    "device": "auto",
+    "output_dir": "results\\synthetic_smoke"
+  }
+}
