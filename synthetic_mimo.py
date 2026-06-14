@@ -37,6 +37,9 @@ class SyntheticMIMODataset(Dataset):
         snr_min_db=0.0,
         snr_max_db=30.0,
         spatial_correlation=0.6,
+        channel_type="multipath",
+        iq_imbalance=False,
+        quantization_bits=None,
         seed=0,
     ):
         super().__init__()
@@ -48,32 +51,45 @@ class SyntheticMIMODataset(Dataset):
         pilot = _unitary_dft(num_tx).astype(np.complex64)
         pilot_h = pilot.conj().T
 
-        rx_cholesky = np.linalg.cholesky(
-            _spatial_correlation(num_rx, spatial_correlation)
-        )
-        tx_cholesky = np.linalg.cholesky(
-            _spatial_correlation(num_tx, spatial_correlation)
-        )
-
-        tap_power = np.exp(-np.arange(num_taps, dtype=np.float32))
-        tap_power /= tap_power.sum()
-        tap_scale = np.sqrt(tap_power / 2.0)[None, None, None, :]
-
-        raw_taps = (
-            rng.standard_normal((num_samples, num_rx, num_tx, num_taps))
-            + 1j * rng.standard_normal((num_samples, num_rx, num_tx, num_taps))
-        )
-        raw_taps *= tap_scale
-        correlated_taps = np.einsum(
-            "ra,natl,bt->nrbl",
-            rx_cholesky,
-            raw_taps,
-            tx_cholesky.conj(),
-            optimize=True,
-        )
-        channel = np.fft.fft(
-            correlated_taps, n=num_subcarriers, axis=-1
-        ).astype(np.complex64)
+        if channel_type == "iid":
+            channel = (
+                rng.standard_normal(
+                    (num_samples, num_rx, num_tx, num_subcarriers)
+                )
+                + 1j
+                * rng.standard_normal(
+                    (num_samples, num_rx, num_tx, num_subcarriers)
+                )
+            ) / np.sqrt(2.0)
+            channel = channel.astype(np.complex64)
+        elif channel_type == "multipath":
+            rx_cholesky = np.linalg.cholesky(
+                _spatial_correlation(num_rx, spatial_correlation)
+            )
+            tx_cholesky = np.linalg.cholesky(
+                _spatial_correlation(num_tx, spatial_correlation)
+            )
+            tap_power = np.exp(-np.arange(num_taps, dtype=np.float32))
+            tap_power /= tap_power.sum()
+            tap_scale = np.sqrt(tap_power / 2.0)[None, None, None, :]
+            raw_taps = (
+                rng.standard_normal((num_samples, num_rx, num_tx, num_taps))
+                + 1j
+                * rng.standard_normal((num_samples, num_rx, num_tx, num_taps))
+            )
+            raw_taps *= tap_scale
+            correlated_taps = np.einsum(
+                "ra,natl,bt->nrbl",
+                rx_cholesky,
+                raw_taps,
+                tx_cholesky.conj(),
+                optimize=True,
+            )
+            channel = np.fft.fft(
+                correlated_taps, n=num_subcarriers, axis=-1
+            ).astype(np.complex64)
+        else:
+            raise ValueError(f"Unknown channel_type: {channel_type}")
 
         clean_received = np.einsum(
             "nrtk,tp->nrpk", channel, pilot, optimize=True
@@ -90,6 +106,17 @@ class SyntheticMIMODataset(Dataset):
             + 1j * rng.standard_normal(clean_received.shape)
         ) * np.sqrt(noise_variance[:, None, None, None] / 2.0)
         received = clean_received + noise
+        if iq_imbalance:
+            amplitude = rng.uniform(0.95, 1.05, size=num_samples)
+            phase = np.deg2rad(rng.uniform(-5.0, 5.0, size=num_samples))
+            real = received.real * amplitude[:, None, None, None]
+            imag = (
+                received.imag * np.cos(phase[:, None, None, None])
+                - real * np.sin(phase[:, None, None, None])
+            )
+            received = real + 1j * imag
+        if quantization_bits is not None:
+            received = _quantize_complex(received, quantization_bits)
 
         h_ls = np.einsum(
             "nrpk,pt->nrtk", received, pilot_h, optimize=True
@@ -115,6 +142,22 @@ class SyntheticMIMODataset(Dataset):
 def lmmse_from_ls(h_ls, noise_variance, channel_variance=1.0):
     shrinkage = channel_variance / (channel_variance + noise_variance)
     return h_ls * shrinkage[:, None, None, None, None]
+
+
+def _quantize_complex(value, bits):
+    maximum = np.maximum(
+        np.max(np.abs(value.real), axis=(1, 2, 3)),
+        np.max(np.abs(value.imag), axis=(1, 2, 3)),
+    )
+    maximum = np.maximum(maximum, 1e-8)
+    levels = 2**bits
+    step = 2.0 * maximum / (levels - 1)
+    shape = (-1, 1, 1, 1)
+    real = np.round((value.real + maximum.reshape(shape)) / step.reshape(shape))
+    imag = np.round((value.imag + maximum.reshape(shape)) / step.reshape(shape))
+    real = real * step.reshape(shape) - maximum.reshape(shape)
+    imag = imag * step.reshape(shape) - maximum.reshape(shape)
+    return real + 1j * imag
 
 
 def mse_per_sample(prediction, target):

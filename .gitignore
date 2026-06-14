@@ -6,4 +6,5 @@ __pycache__/
 *.mat
 H_analysis/
 analyze_deepmimo.py
+results/complete_smoke*/
 
