@@ -30,6 +30,7 @@ def main():
             "64",
         ]
     scripts = [
+        "generate_complete_figures.py",
         "compare_snr.py",
         "compare_models.py",
         "compare_channels.py",

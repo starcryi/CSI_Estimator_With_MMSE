@@ -19,6 +19,7 @@ main metric. No external dataset is required.
 - `benchmark_architectures.py`: parameter count and inference latency
 - `export_onnx.py`: export a trained model with dynamic batch/subcarrier axes
 - `run_complete_experiments.py`: run every experiment in sequence
+- `generate_complete_figures.py`: generate the 18 Rayleigh/multipath model figures
 
 ## Quick Validation
 

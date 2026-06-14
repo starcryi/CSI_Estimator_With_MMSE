@@ -247,6 +247,94 @@ def plot_diagnostics(result, path_prefix, model_label):
     plt.close()
 
 
+def plot_legacy_style_figures(
+    result,
+    history,
+    output_dir,
+    scenario_label,
+    model_name,
+):
+    output_dir = Path(output_dir)
+    prefix = f"{scenario_label}_{model_name}"
+    epochs = np.arange(1, len(history["train"]) + 1)
+    lmmse_nmse = float(torch.mean(nmse_per_sample(result["lmmse"], result["true"])))
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(epochs, history["train"], marker="o", label="Train NMSE")
+    plt.plot(
+        epochs,
+        history["validation"],
+        marker="s",
+        label="Validation NMSE",
+    )
+    plt.axhline(
+        lmmse_nmse,
+        color="red",
+        linestyle="--",
+        label="Test LMMSE NMSE",
+    )
+    plt.xlabel("Epoch")
+    plt.ylabel("NMSE")
+    plt.title(f"{scenario_label} {model_name.upper()} Training")
+    plt.grid(alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(output_dir / f"{prefix}_LossCurve.png", dpi=180)
+    plt.close()
+
+    index = int(torch.argmin(torch.abs(result["snr"] - 10.0)))
+    true_value = result["true"][index]
+    prediction = result["prediction"][index]
+    true_magnitude = torch.sqrt(
+        true_value[0] ** 2 + true_value[1] ** 2
+    ).mean(dim=-1).numpy()
+    prediction_magnitude = torch.sqrt(
+        prediction[0] ** 2 + prediction[1] ** 2
+    ).mean(dim=-1).numpy()
+    minimum = min(true_magnitude.min(), prediction_magnitude.min())
+    maximum = max(true_magnitude.max(), prediction_magnitude.max())
+    figure, axes = plt.subplots(1, 2, figsize=(10, 4.5))
+    for axis, title, magnitude in (
+        (axes[0], "True H", true_magnitude),
+        (axes[1], "Predicted H", prediction_magnitude),
+    ):
+        image = axis.imshow(
+            magnitude,
+            aspect="auto",
+            cmap="viridis",
+            vmin=minimum,
+            vmax=maximum,
+        )
+        axis.set_title(title)
+        axis.set_xlabel("TX antenna")
+        axis.set_ylabel("RX antenna")
+        figure.colorbar(image, ax=axis, fraction=0.046)
+    figure.suptitle(
+        f"{scenario_label} {model_name.upper()} at {result['snr'][index]:.1f} dB"
+    )
+    figure.tight_layout()
+    figure.savefig(output_dir / f"{prefix}_Heatmap.png", dpi=180)
+    plt.close(figure)
+
+    residual = (result["prediction"] - result["true"]).flatten().numpy()
+    plt.figure(figsize=(7, 4.5))
+    plt.hist(
+        residual,
+        bins=100,
+        density=True,
+        color="steelblue",
+        edgecolor="black",
+        alpha=0.75,
+    )
+    plt.xlabel("Real/imaginary component error")
+    plt.ylabel("Density")
+    plt.title(f"{scenario_label} {model_name.upper()} Residual Distribution")
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(output_dir / f"{prefix}_ResidualHistogram.png", dpi=180)
+    plt.close()
+
+
 @torch.no_grad()
 def benchmark_model(model, sample, device, batch_sizes=(1, 32), runs=200):
     model.eval().to(device)
