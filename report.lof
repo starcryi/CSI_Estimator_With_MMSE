@@ -1,0 +1,15 @@
+\contentsline {figure}{\numberline {1}{\ignorespaces LS、标量 LMMSE 与 CNN 的固定 SNR 性能对比}}{4}{figure.caption.5}%
+\contentsline {figure}{\numberline {2}{\ignorespaces 三种神经网络的性能与收敛性对比}}{5}{figure.caption.7}%
+\contentsline {figure}{\numberline {3}{\ignorespaces CNN、LSTM、Transformer 的统一四联信道幅度诊断图}}{7}{figure.caption.9}%
+\contentsline {figure}{\numberline {4}{\ignorespaces 三种架构与 LS、LMMSE 的残差概率密度对比}}{8}{figure.caption.10}%
+\contentsline {figure}{\numberline {5}{\ignorespaces 独立 Rayleigh 信道下的训练与验证 NMSE 曲线；红色虚线为测试集 LMMSE NMSE}}{8}{figure.caption.11}%
+\contentsline {figure}{\numberline {6}{\ignorespaces 独立 Rayleigh 信道在约 10 dB 时的真实幅度与预测幅度}}{9}{figure.caption.12}%
+\contentsline {figure}{\numberline {7}{\ignorespaces 独立 Rayleigh 信道下三种网络的实部/虚部残差分布}}{9}{figure.caption.13}%
+\contentsline {figure}{\numberline {8}{\ignorespaces 相关多径信道下的训练与验证 NMSE 曲线；红色虚线为测试集 LMMSE NMSE}}{9}{figure.caption.14}%
+\contentsline {figure}{\numberline {9}{\ignorespaces 相关多径信道在约 10 dB 时的真实幅度与预测幅度}}{10}{figure.caption.15}%
+\contentsline {figure}{\numberline {10}{\ignorespaces 相关多径信道下三种网络的实部/虚部残差分布}}{10}{figure.caption.16}%
+\contentsline {figure}{\numberline {11}{\ignorespaces 原始 CNN 与增强残差 CNN 的收敛及分 SNR 性能}}{11}{figure.caption.18}%
+\contentsline {figure}{\numberline {12}{\ignorespaces 原始与增强 CNN 的统一四联信道幅度诊断}}{12}{figure.caption.19}%
+\contentsline {figure}{\numberline {13}{\ignorespaces 原始与增强 CNN 相对传统基线的残差分布}}{12}{figure.caption.20}%
+\contentsline {figure}{\numberline {14}{\ignorespaces 传统估计、后处理投影与物理引导 CNN 的总体 NMSE 对比}}{13}{figure.caption.22}%
+\contentsline {figure}{\numberline {15}{\ignorespaces 物理引导时延投影的分 SNR 性能与残差诊断}}{14}{figure.caption.23}%

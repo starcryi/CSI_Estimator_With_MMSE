@@ -151,6 +151,19 @@ def metric_summary(result):
     }
 
 
+def tap_project_channels(value, num_taps):
+    complex_value = torch.complex(value[:, 0], value[:, 1])
+    taps = torch.fft.ifft(complex_value, dim=-1)
+    mask = torch.zeros_like(taps)
+    mask[..., :num_taps] = 1.0
+    projected = torch.fft.fft(taps * mask, dim=-1)
+    return torch.stack((projected.real, projected.imag), dim=1).to(value.dtype)
+
+
+def metric_value(prediction, target):
+    return mean_nmse_db(prediction, target)
+
+
 def snr_curve(prediction, target, snr, edges=None):
     edges = np.arange(0, 35, 5) if edges is None else np.asarray(edges)
     centers = (edges[:-1] + edges[1:]) / 2

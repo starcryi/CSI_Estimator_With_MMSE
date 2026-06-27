@@ -1,0 +1,20 @@
+\contentsline {section}{\numberline {1}实验目的}{1}{section.1}%
+\contentsline {section}{\numberline {2}系统模型与评价指标}{1}{section.2}%
+\contentsline {subsection}{\numberline {2.1}MIMO--OFDM 导频观测模型}{1}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}信道模型}{1}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}传统估计器}{2}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}深度残差估计器}{2}{subsection.2.4}%
+\contentsline {section}{\numberline {3}实验设置}{2}{section.3}%
+\contentsline {section}{\numberline {4}实验结果与分析}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}不同 SNR 下的估计性能}{3}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}CNN、LSTM 与 Transformer 架构对比}{4}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}信道结构消融实验}{5}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}统一架构实验的信道重构与残差诊断}{6}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}独立 Rayleigh 信道的完整图像矩阵}{8}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}相关多径信道的完整图像矩阵}{9}{subsection.4.6}%
+\contentsline {section}{\numberline {5}改进与提高}{10}{section.5}%
+\contentsline {subsection}{\numberline {5.1}增强残差 CNN}{10}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}基于有限时延扩展的物理引导提高}{12}{subsection.5.2}%
+\contentsline {section}{\numberline {6}讨论与实验局限}{14}{section.6}%
+\contentsline {section}{\numberline {7}结论}{15}{section.7}%
+\contentsline {section}{\numberline {A}复现实验}{15}{appendix.A}%

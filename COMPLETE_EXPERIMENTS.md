@@ -20,6 +20,8 @@ main metric. No external dataset is required.
 - `export_onnx.py`: export a trained model with dynamic batch/subcarrier axes
 - `run_complete_experiments.py`: run every experiment in sequence
 - `generate_complete_figures.py`: generate the 18 Rayleigh/multipath model figures
+- `compare_improved.py`: compare the original CNN with an enhanced residual CNN
+- `compare_physics_guided.py`: apply PDP-aware tap projection to LS/LMMSE/CNN
 
 ## Quick Validation
 

@@ -1,0 +1,11 @@
+{
+  "LS": -8.266548156738281,
+  "LMMSE": -9.811100006103516,
+  "CNN": -14.91814136505127,
+  "LS + Tap Projection": -15.563182830810547,
+  "LMMSE + Tap Projection": -13.60345458984375,
+  "CNN + Tap Projection": -16.784061431884766,
+  "Physics-Guided CNN": -17.140140533447266,
+  "best_validation_nmse": 0.027057215571403503,
+  "physics_guided_best_validation_nmse": 0.016348918633801595
+}
